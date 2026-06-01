@@ -1,0 +1,15 @@
+---
+description: 玩家子模块间通信必须走事件系统，禁止互相直接调用
+globs: internal/game-logic/gameserver/logic/player/module/**/*.go
+alwaysApply: false
+---
+
+# 玩家模块间通信
+
+**子模块之间禁止直接调用彼此方法来传递数据或触发状态变更，必须通过 `EventSystem`。**
+
+- 订阅：模块 `registerEvent()` 中 `p.player.PlayerEvent().Register(EventType, m)`，实现 `Handle` + `Priority`
+- 发布：状态变更处 `p.playerEvent.Post(&BaseEvent{eventType: ..., data: ...})`
+- 例外（允许直接调用）：纯只读查询（`GetGuildId()`、`IsEnough()` 等无副作用方法）；`player.go` 顶层协调逻辑
+
+完整用法、正确/错误示例见 `.cursor/rules-ref/module-event-communication.md`。

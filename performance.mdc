@@ -1,0 +1,16 @@
+---
+description: Go 性能与测试补充要求
+globs: "**/*.go"
+alwaysApply: false
+---
+
+# 性能规范
+
+1. **容器预分配**：`make([]T, 0, cap)` / `make(map[K]V, cap)`，禁止无 cap 的 `make`
+2. **排序**：`sort.Slice` O(NlogN)，禁止手写冒泡
+3. **热路径**：Actor handler 中避免临时大对象分配
+
+## 测试要求（功能完成后补充）
+
+- **Benchmark**（`*_bench_test.go`）：核心写路径，`-benchmem` 验证分配
+- **安全测试**：删除/查询不存在对象不 panic；重复删除不 panic；边界值正确；并发无竞争

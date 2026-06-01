@@ -1,0 +1,13 @@
+---
+description: 修改玩家数据的 Actor 消息须注册存盘
+globs: internal/common/constant/def/**/*.go,internal/game-logic/gameserver/**/*handler*.go,internal/game-logic/gameserver/**/player/**/*.go
+alwaysApply: false
+---
+
+# 消息 ID 存储标记
+
+`def.NeedToJoinStorageDatabase(msgId)` 判断是否加入存盘事务（`internal/common/constant/def/id.go`）。
+
+- 客户端消息（`IsClientMsg`）自动 true
+- **Actor 消息若修改玩家数据**（写 `p.db.*`、AddItem、AddMail、deleteTroopList 等），必须在 `needToJoinStorageDatabase()` switch 中注册
+- 纯查询（GetHomePos 等）不需要
